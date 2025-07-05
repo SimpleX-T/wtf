@@ -84,9 +84,9 @@ wtf ./config settings.json -o '{"debug":true}'
 | `-o`, `--overwrite` | Overwrite file instead of appending        |
 | `-h`, `--help`      | Show full usage instructions               |
 | `-v`, `--version`   | Print current version                      |
-| `--template`        | Insert a named template into the file      |
-| `--undo`            | Restore the last backup before write       |
-| `--diff`            | Show difference between file and new input |
+| `-t`, `--template`  | Insert a named template into the file      |
+| `-u`, `--undo`      | Restore the last backup before write       |
+| `-d`, `--diff`      | Show difference between file and new input |
 
 ### ⚠Quoting Notes
 
