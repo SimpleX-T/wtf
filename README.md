@@ -23,15 +23,13 @@
 ### Manual
 
 ```bash
-curl -sSL https://yourdomain.com/wtf > wtf
-chmod +x wtf
-sudo mv wtf /usr/local/bin/
+curl -s https://raw.githubusercontent.com/SimpleX-T/wtf/main/install.sh | bash
 ```
 
 Or clone this repo:
 
 ```bash
-git clone https://github.com/yourname/wtf.git
+git clone https://github.com/SimpleX-T/wtf.git
 cd wtf
 chmod +x wtf
 sudo mv wtf /usr/local/bin/
