@@ -23,7 +23,7 @@
 ### Manual
 
 ```bash
-curl -s https://raw.githubusercontent.com/SimpleX-T/wtf/main/install.sh | bash
+curl -s https://raw.githubusercontent.com/SimpleX-T/wtf/master/install.sh | bash
 ```
 
 Or clone this repo:
