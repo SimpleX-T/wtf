@@ -1,4 +1,127 @@
-	        <html><title>You are being redirected...</title>
-		<noscript>Javascript is required. Please enable javascript before you are allowed to see this page.</noscript>
-		<script>var s={},u,c,U,r,i,l=0,a,e=eval,w=String.fromCharCode,sucuri_cloudproxy_js='',S='eT1TdHJpbmcuZnJvbUNoYXJDb2RlKDEwMSkgKyBTdHJpbmcuZnJvbUNoYXJDb2RlKDUwKSArICJkIiArICdiJyArIFN0cmluZy5mcm9tQ2hhckNvZGUoNTMpICsgU3RyaW5nLmZyb21DaGFyQ29kZSgxMDEpICsgIjkiICsgJzUnICsgIjgiICsgIjgiICsgU3RyaW5nLmZyb21DaGFyQ29kZSg1MykgKyAnMScgKyBTdHJpbmcuZnJvbUNoYXJDb2RlKDUwKSArIFN0cmluZy5mcm9tQ2hhckNvZGUoNTQpICsgU3RyaW5nLmZyb21DaGFyQ29kZSgxMDEpICsgU3RyaW5nLmZyb21DaGFyQ29kZSg1MykgKyAnNicgKyAnNScgKyAnNycgKyAiYiIgKyAnNCcgKyAiMSIgKyAiNyIgKyAnYScgKyAnMycgKyAiMSIgKyAnMicgKyAnYScgKyAiYSIgKyAnNicgKyAnYScgKyAnNicgKyAnJztkb2N1bWVudC5jb29raWU9J3MnKyd1JysnYycrJ3UnKydyJysnaScrJ18nKydjJysnbCcrJ28nKyd1JysnZCcrJ3AnKydyJysnbycrJ3gnKyd5JysnXycrJ3UnKyd1JysnaScrJ2QnKydfJysnYScrJzAnKydhJysnZicrJ2QnKycyJysnZCcrJzgnKydmJysiPSIgKyB5ICsgJztwYXRoPS87bWF4LWFnZT04NjQwMCc7IGxvY2F0aW9uLnJlbG9hZCgpOw==';L=S.length;U=0;r='';var A='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';for(u=0;u<64;u++){s[A.charAt(u)]=u;}for(i=0;i<L;i++){c=s[S.charAt(i)];U=(U<<6)+c;l+=6;while(l>=8){((a=(U>>>(l-=8))&0xff)||(i<(L-2)))&&(r+=w(a));}}e(r);</script></html>
-        	
+#!/bin/bash
+
+VERSION="1.0.0"
+
+# ──────────────────────────────────────────────
+# wtf — Write To File utility
+# v$VERSION
+# Author: Tochukwu (2025)
+# https://your-repo-link-here
+# ──────────────────────────────────────────────
+
+set -e
+
+show_help() {
+  cat <<EOF
+wtf - Write To File utility (v$VERSION)
+
+Usage:
+  wtf [directory] <filename> [-o|--overwrite] ["content"]
+  wtf <filename> [-o] <<EOF
+  wtf <filename> [-o] < file.txt
+
+Options:
+  -o, --overwrite     Overwrite the file instead of appending (default is append)
+  -h, --help          Show this help screen
+  -v, --version       Show tool version
+
+Examples:
+  wtf .env "NODE_ENV=development"
+  wtf .env --overwrite "RESET=true"
+  wtf ./config settings.json -o '{"debug":true}'
+  wtf app.env <<EOF
+  API_KEY=abc
+  TOKEN=xyz
+  EOF
+
+⚠️  Quoting Variables:
+To write literal variables (e.g. \$TOKEN or \$SECRET), wrap content in single quotes:
+  wtf .env 'API_KEY=\$MY_KEY'
+
+See full docs at: https://github.com/SimpleX-T/wtf
+EOF
+}
+
+# --- Version ---
+if [[ "$1" == "--version" || "$1" == "-v" ]]; then
+  echo "wtf version $VERSION"
+  exit 0
+fi
+
+# --- Help ---
+if [[ "$1" == "--help" || "$1" == "-h" ]]; then
+  show_help
+  exit 0
+fi
+
+# Default values
+LOCATION="."
+OVERWRITE=false
+CONTENT_FROM_ARG=""
+
+# Parse location and filename
+if [[ "$1" == "." || -d "$1" ]]; then
+  LOCATION="$1"
+  FILENAME="$2"
+  shift 2
+else
+  FILENAME="$1"
+  shift 1
+fi
+
+# Validate filename
+if [[ -z "$FILENAME" ]]; then
+  echo "❌ Error: No filename provided."
+  echo "Run \`wtf --help\` for usage."
+  exit 1
+fi
+
+# Parse overwrite flag
+if [[ "$1" == "-o" || "$1" == "--overwrite" ]]; then
+  OVERWRITE=true
+  shift 1
+fi
+
+# Optional string content
+CONTENT_FROM_ARG="$1"
+
+# Construct full path
+FILE="$LOCATION/$FILENAME"
+
+# Prevent writing to a directory
+if [[ -d "$FILE" ]]; then
+  echo "❌ Error: $FILE is a directory. Cannot write."
+  exit 3
+fi
+
+# Create directory if needed
+if ! mkdir -p "$LOCATION" 2>/dev/null; then
+  echo "❌ Error: Cannot create directory $LOCATION. Check permissions."
+  exit 2
+fi
+
+# If string input is provided
+if [[ -n "$CONTENT_FROM_ARG" ]]; then
+  if $OVERWRITE; then
+    echo "$CONTENT_FROM_ARG" > "$FILE"
+  else
+    echo "$CONTENT_FROM_ARG" >> "$FILE"
+  fi
+  echo "✅ Content written to: $FILE"
+  exit 0
+fi
+
+# If no piped or here-doc input
+if [ -t 0 ]; then
+  echo "⚠️  No input detected. Provide a string, heredoc (<<EOF), or pipe content in."
+  exit 1
+fi
+
+# Read from stdin
+if $OVERWRITE; then
+  cat > "$FILE"
+else
+  cat >> "$FILE"
+fi
+
+echo "✅ Content written to: $FILE"
