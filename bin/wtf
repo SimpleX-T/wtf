@@ -1,0 +1,41 @@
+#!/bin/bash
+
+DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+source "$DIR/core/base.sh"
+source "$DIR/core/write.sh"
+source "$DIR/core/undo.sh"
+source "$DIR/core/template.sh"
+source "$DIR/core/diff.sh"
+
+VERSION="1.1.0"
+
+main() {
+  load_config
+  case "$1" in
+    --help|-h)
+      show_help
+      ;;
+    --version|-v)
+      echo "wtf v$VERSION"
+      ;;
+    --undo)
+      shift
+      undo "$@"
+      ;;
+    --template)
+      shift
+      use_template "$@"
+      ;;
+    --diff)
+      shift
+      show_diff "$@"
+      ;;
+    *)
+      write_to_file "$@"
+      ;;
+  esac
+}
+
+main "$@"
+

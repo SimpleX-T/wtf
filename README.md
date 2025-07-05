@@ -77,14 +77,19 @@ Write to specific folder:
 wtf ./config settings.json -o '{"debug":true}'
 ```
 
-Flags
-|Flag | Description|
-|------|-------------|
-|`-o`, `--overwrite` | Overwrite file instead of appending|
-|`-h`, `--help` | Show full usage instructions|
-|`-v`, `--version` | Print current version|
+### Flags
 
-⚠Quoting Notes
+| Flag                | Description                                |
+| ------------------- | ------------------------------------------ |
+| `-o`, `--overwrite` | Overwrite file instead of appending        |
+| `-h`, `--help`      | Show full usage instructions               |
+| `-v`, `--version`   | Print current version                      |
+| `--template`        | Insert a named template into the file      |
+| `--undo`            | Restore the last backup before write       |
+| `--diff`            | Show difference between file and new input |
+
+### ⚠Quoting Notes
+
 To avoid shell interpreting special characters like $, always quote your strings when using variable-looking content:
 
 ```bash
