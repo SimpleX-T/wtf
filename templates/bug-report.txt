@@ -1,0 +1,7 @@
+## 🐞 Bug Report
+- Title:
+- Steps to Reproduce:
+- Expected Result:
+- Actual Result:
+- Logs:
+- Screenshot (if any):

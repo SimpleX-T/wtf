@@ -5,8 +5,8 @@ VERSION="1.0.0"
 # ──────────────────────────────────────────────
 # wtf — Write To File utility
 # v$VERSION
-# Author: Tochukwu (2025)
-# https://your-repo-link-here
+# Author: devtochukwu (2025)
+# https://github.com/SimpleX-T/wtf
 # ──────────────────────────────────────────────
 
 set -e
